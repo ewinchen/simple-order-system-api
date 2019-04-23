@@ -35,8 +35,7 @@ public class OrderController {
 
   @PostMapping("/order")
   public Map createOrder(@RequestBody Order order) {
-    orderService.createOrder(order);
-    return JsonWrapper.wrap(null);
+    return JsonWrapper.wrap(orderService.createOrder(order));
   }
 
   @PutMapping("/order")

@@ -18,7 +18,7 @@ public class OrderService {
 
   public List<Order> listOrder() {
     OrderExample orderExample = new OrderExample();
-    orderExample.setOrderByClause("order_no");
+    orderExample.setOrderByClause("order_no desc");
     return orderMapper.selectByExample(orderExample);
   }
 
@@ -34,8 +34,9 @@ public class OrderService {
 
   }
 
-  public void createOrder(Order order) {
+  public int createOrder(Order order) {
     orderMapper.insertSelective(order);
+    return order.getId();
   }
 
 }
