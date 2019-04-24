@@ -1,13 +1,18 @@
 package com.ewin.sos.service;
 
+import com.ewin.sos.dto.OrderSearchConditionDto;
 import com.ewin.sos.entity.Order;
 import com.ewin.sos.entity.OrderExample;
 import com.ewin.sos.exception.RecordNotFoundException;
 import com.ewin.sos.mapper.OrderMapper;
+import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Service
@@ -37,6 +42,40 @@ public class OrderService {
   public int createOrder(Order order) {
     orderMapper.insertSelective(order);
     return order.getId();
+  }
+
+  public Map searchOrder(OrderSearchConditionDto condition) {
+    // 初始化参数
+    LocalDateTime beginDate = condition.getBeginDate() != null ? condition.getBeginDate() : LocalDateTime.parse("1000-01-01T00:00:00");
+    LocalDateTime endDate = condition.getEndDate() != null ? condition.getEndDate() : LocalDateTime.parse("9999-12-31T23:59:59");
+
+    int pageSize = condition.getPageSize() != 0 ? condition.getPageSize() : 15;
+    int pageNum = condition.getPageNum() != 0 ? condition.getPageNum() : 1;
+
+    OrderExample example = new OrderExample();
+    example.setOrderByClause("order_no desc");
+    OrderExample.Criteria criteria = example.createCriteria();
+    criteria.andCreateDateBetween(beginDate, endDate);
+
+    if (condition.getOrderNo() != null) criteria.andOrderNoLikeInsensitive(condition.getOrderNo());
+    if (condition.getCustomer() != null) criteria.andCustomerLikeInsensitive(condition.getCustomer());
+    if (condition.getCreateBy() != null) criteria.andCreateByLikeInsensitive(condition.getCreateBy());
+    if (condition.getStatus() != null) criteria.andStatusLikeInsensitive(condition.getStatus());
+
+    RowBounds rowBounds = new RowBounds((pageNum - 1) * pageSize, pageSize);
+
+    Map<String, Object> result = new HashMap<>();
+    result.put("total", orderMapper.countByExample(example));
+    result.put("recordset", orderMapper.selectByExampleWithRowbounds(example, rowBounds));
+    result.put("pageSize", pageSize);
+    result.put("pageNum", pageNum);
+
+    return result;
+
+  }
+
+  public int countSearchorder(OrderSearchConditionDto param) {
+    return 0;
   }
 
 }

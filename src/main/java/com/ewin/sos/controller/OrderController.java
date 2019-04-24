@@ -1,5 +1,6 @@
 package com.ewin.sos.controller;
 
+import com.ewin.sos.dto.OrderSearchConditionDto;
 import com.ewin.sos.entity.Order;
 import com.ewin.sos.exception.RecordNotFoundException;
 import com.ewin.sos.service.OrderService;
@@ -46,6 +47,12 @@ public class OrderController {
       throw new ResponseStatusException(HttpStatus.NOT_FOUND, "更新失败", e);
     }
     return JsonWrapper.wrap(null);
+  }
+
+  @PostMapping("/order-search")
+  public Map searchOrder(@RequestBody OrderSearchConditionDto condition) {
+
+    return JsonWrapper.wrap(orderService.searchOrder(condition));
   }
 
 }
