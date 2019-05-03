@@ -3,9 +3,7 @@ package com.ewin.sos.exception;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.Nullable;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
@@ -18,7 +16,7 @@ import java.util.Map;
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler
-  protected ResponseEntity<Map> handleServerException(RuntimeException e) {
+  protected ResponseEntity<Map<String, Object>> handleServerException(RuntimeException e) {
     HttpStatus httpStatus;
 
     if (e instanceof ResponseStatusException) {

@@ -29,6 +29,7 @@ public class DefaultController {
     res.add("3");
     res.add("4");
     res.add("5");
+    logger.info(res.toString());
     return res;
   }
 

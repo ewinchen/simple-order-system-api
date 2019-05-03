@@ -5,8 +5,6 @@ import com.ewin.sos.entity.Order;
 import com.ewin.sos.exception.RecordNotFoundException;
 import com.ewin.sos.service.OrderService;
 import com.ewin.sos.util.JsonWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -18,29 +16,27 @@ import java.util.Map;
 @RequestMapping("/")
 public class OrderController {
 
-  private Logger logger = LoggerFactory.getLogger(OrderController.class);
-
   @Autowired
   private OrderService orderService;
 
   @GetMapping("/order")
-  public Map listOrder() {
+  public Map<String, Object> listOrder() {
     return JsonWrapper.wrap(orderService.listOrder());
 
   }
 
   @GetMapping("/order/{id}")
-  public Map getOrder(@PathVariable int id) {
+  public Map<String, Object> getOrder(@PathVariable int id) {
     return JsonWrapper.wrap(orderService.getOrder(id));
   }
 
   @PostMapping("/order")
-  public Map createOrder(@RequestBody Order order) {
+  public Map<String, Object> createOrder(@RequestBody Order order) {
     return JsonWrapper.wrap(orderService.createOrder(order));
   }
 
   @PutMapping("/order")
-  public Map updateOrder(@RequestBody Order order) {
+  public Map<String, Object> updateOrder(@RequestBody Order order) {
     try {
       orderService.updateOrder(order);
     } catch (RecordNotFoundException e) {
@@ -50,7 +46,7 @@ public class OrderController {
   }
 
   @PostMapping("/order-search")
-  public Map searchOrder(@RequestBody OrderSearchConditionDto condition) {
+  public Map<String, Object> searchOrder(@RequestBody OrderSearchConditionDto condition) {
 
     return JsonWrapper.wrap(orderService.searchOrder(condition));
   }

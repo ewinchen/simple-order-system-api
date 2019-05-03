@@ -14,7 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @Service
 public class OrderService {
 
@@ -44,7 +43,7 @@ public class OrderService {
     return order.getId();
   }
 
-  public Map searchOrder(OrderSearchConditionDto condition) {
+  public Map<String, Object> searchOrder(OrderSearchConditionDto condition) {
     // 初始化参数
     LocalDateTime beginDate = condition.getBeginDate() != null ? condition.getBeginDate() : LocalDateTime.parse("1000-01-01T00:00:00");
     LocalDateTime endDate = condition.getEndDate() != null ? condition.getEndDate() : LocalDateTime.parse("9999-12-31T23:59:59");

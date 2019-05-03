@@ -1,7 +1,5 @@
 package com.ewin.sos.dao;
 
-import org.apache.ibatis.session.SqlSession;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,8 +13,7 @@ public class DefaultDao {
 //  @Qualifier("fnccsSqlSession")
 //  private SqlSession fnccsSqlSession;
 
-  @Autowired
-  private SqlSession sqlSessionTemplate;
+
 
   /**
    * 可以直接调用生成的Mapper 的方法，因为已为sqlSession 注入所有statement
