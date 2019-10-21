@@ -1,23 +1,25 @@
 package com.ewin.sos.controller;
 
+import com.ewin.sos.util.JsonWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/api")
 public class DefaultController {
 
   private Logger logger = LoggerFactory.getLogger(DefaultController.class);
+
+  @Autowired
+  StringRedisTemplate redisTemplate;
 
 
   @GetMapping("/array-list")
@@ -45,5 +47,18 @@ public class DefaultController {
   @GetMapping("error")
   public Map<Object, Object> error() {
     throw new ResponseStatusException(HttpStatus.NOT_FOUND, "更新失败");
+  }
+
+  @PostMapping("/login")
+  public Map<String, Object> login(@RequestBody Map<String, Object> body) {
+    String username = body.get("username").toString();
+    String password = body.get("password").toString();
+    Map<String, Object> result = new HashMap<>();
+    String sessionId = UUID.randomUUID().toString();
+    redisTemplate.opsForValue().set(username + ":" + sessionId, username, 60, TimeUnit.SECONDS);
+    result.put("sessionId", username + ":" + sessionId);
+    result.put("username", username);
+    result.put("password", password);
+    return JsonWrapper.wrap(result);
   }
 }
