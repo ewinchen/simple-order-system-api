@@ -1,8 +1,6 @@
 package com.ewin.sos.interceptor;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -22,14 +20,17 @@ public class AuthInterceptor implements HandlerInterceptor {
 
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    if (request.getMethod().equals("OPTIONS")) {
+      return true;
+    }
     String sessionId = request.getHeader("Authorization");
     boolean isAuthenticated = true;
     if (sessionId == null || "".equals(sessionId.trim())) {
       isAuthenticated = false;
     } else {
       Boolean hasKey = redisTemplate.hasKey(sessionId);
-      if (hasKey != null && hasKey){
-        redisTemplate.expire(sessionId, 20, TimeUnit.SECONDS);
+      if (hasKey != null && hasKey) {
+        redisTemplate.expire(sessionId, 60 * 30, TimeUnit.SECONDS);
       } else {
         isAuthenticated = false;
       }

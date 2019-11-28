@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -60,5 +61,24 @@ public class DefaultController {
     result.put("username", username);
     result.put("password", password);
     return JsonWrapper.wrap(result);
+  }
+
+  @GetMapping("/login-check")
+  public Map<String, Object> loginCheck(HttpServletRequest request) {
+    Map<String, Object> result = new HashMap<>();
+    String sessionId = request.getHeader("Authorization");
+    if (sessionId == null) {
+      result.put("success", false);
+      return result;
+    }
+
+    Boolean hasKey = redisTemplate.hasKey(sessionId);
+    if (hasKey != null && hasKey) {
+      result.put("success", true);
+    } else {
+      result.put("success", false);
+    }
+    return result;
+
   }
 }
