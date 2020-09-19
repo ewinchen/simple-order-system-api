@@ -1,10 +1,10 @@
 package com.ewin.sos.interceptor;
 
+import com.ewin.sos.enums.ErrorCodeEnum;
+import com.ewin.sos.exception.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -19,7 +19,7 @@ public class AuthInterceptor implements HandlerInterceptor {
   StringRedisTemplate redisTemplate;
 
   @Override
-  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+  public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
     if (request.getMethod().equals("OPTIONS")) {
       return true;
     }
@@ -39,12 +39,12 @@ public class AuthInterceptor implements HandlerInterceptor {
     if (isAuthenticated) {
       return true;
     } else {
-      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "未登录或登陆已超时");
+      throw new CustomException(ErrorCodeEnum.A0200, ErrorCodeEnum.A0200.getDescription());
     }
   }
 
   @Override
-  public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+  public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) {
 
   }
 

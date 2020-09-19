@@ -1,54 +1,54 @@
 package com.ewin.sos.controller;
 
-import com.ewin.sos.dto.OrderSearchConditionDto;
 import com.ewin.sos.entity.Order;
-import com.ewin.sos.exception.RecordNotFoundException;
 import com.ewin.sos.service.OrderService;
+import com.ewin.sos.util.ApiUtil;
 import com.ewin.sos.util.JsonWrapper;
+import com.ewin.sos.vo.OrderSearchConditionVo;
+import com.ewin.sos.vo.ResponseVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/")
 public class OrderController {
 
-  @Autowired
-  private OrderService orderService;
+    @Autowired
+    private OrderService orderService;
 
-  @GetMapping("/order")
-  public Map<String, Object> listOrder() {
-    return JsonWrapper.wrap(orderService.listOrder());
+    @GetMapping("/order")
+    public ResponseVo<List<Order>> listOrder() {
 
-  }
-
-  @GetMapping("/order/{id}")
-  public Map<String, Object> getOrder(@PathVariable int id) {
-    return JsonWrapper.wrap(orderService.getOrder(id));
-  }
-
-  @PostMapping("/order")
-  public Map<String, Object> createOrder(@RequestBody Order order) {
-    return JsonWrapper.wrap(orderService.createOrder(order));
-  }
-
-  @PutMapping("/order")
-  public Map<String, Object> updateOrder(@RequestBody Order order) {
-    try {
-      orderService.updateOrder(order);
-    } catch (RecordNotFoundException e) {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "更新失败", e);
+        // 权限校验，参数校验
+        // 1. 预知错误 a.用户错误 b.系统错误
+        // 2. 未知错误
+        return ApiUtil.successVo(orderService.listOrder());
     }
-    return JsonWrapper.wrap(null);
-  }
 
-  @PostMapping("/order-search")
-  public Map<String, Object> searchOrder(@RequestBody OrderSearchConditionDto condition) {
 
-    return JsonWrapper.wrap(orderService.searchOrder(condition));
-  }
+    @GetMapping("/order/{id}")
+    public ResponseVo<Order> getOrder(@PathVariable int id) {
+        return ApiUtil.successVo(orderService.getOrder(id));
+    }
+
+    @PostMapping("/order")
+    public Map<String, Object> createOrder(@RequestBody Order order) {
+        return JsonWrapper.wrap(orderService.createOrder(order));
+    }
+
+    @PutMapping("/order")
+    public Map<String, Object> updateOrder(@RequestBody Order order) {
+        orderService.updateOrder(order);
+        return JsonWrapper.wrap(null);
+    }
+
+    @PostMapping("/order-search")
+    public Map<String, Object> searchOrder(@RequestBody OrderSearchConditionVo condition) {
+
+        return JsonWrapper.wrap(orderService.searchOrder(condition));
+    }
 
 }

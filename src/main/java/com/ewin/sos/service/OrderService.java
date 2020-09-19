@@ -1,9 +1,11 @@
 package com.ewin.sos.service;
 
-import com.ewin.sos.dto.OrderSearchConditionDto;
+import com.ewin.sos.enums.ErrorCodeEnum;
+import com.ewin.sos.exception.CustomException;
+import com.ewin.sos.vo.OrderSearchConditionVo;
 import com.ewin.sos.entity.Order;
 import com.ewin.sos.entity.OrderExample;
-import com.ewin.sos.exception.RecordNotFoundException;
+import com.ewin.sos.exception.NotFoundException;
 import com.ewin.sos.mapper.OrderMapper;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
 public class OrderService {
@@ -27,12 +30,12 @@ public class OrderService {
   }
 
   public Order getOrder(int id) {
-    return orderMapper.selectByPrimaryKey(id);
+    return Optional.ofNullable(orderMapper.selectByPrimaryKey(id)).orElseThrow(() -> new NotFoundException("订单不存在"));
   }
 
-  public void updateOrder(Order order) throws RecordNotFoundException {
+  public void updateOrder(Order order) {
     if (orderMapper.selectByPrimaryKey(order.getId()) == null) {
-      throw new RecordNotFoundException();
+      throw new NotFoundException();
     }
     orderMapper.updateByPrimaryKeySelective(order);
 
@@ -43,7 +46,7 @@ public class OrderService {
     return order.getId();
   }
 
-  public Map<String, Object> searchOrder(OrderSearchConditionDto condition) {
+  public Map<String, Object> searchOrder(OrderSearchConditionVo condition) {
     // 初始化参数
     LocalDateTime beginDate = condition.getBeginDate() != null ? condition.getBeginDate() : LocalDateTime.parse("1000-01-01T00:00:00");
     LocalDateTime endDate = condition.getEndDate() != null ? condition.getEndDate() : LocalDateTime.parse("9999-12-31T23:59:59");
@@ -71,10 +74,6 @@ public class OrderService {
 
     return result;
 
-  }
-
-  public int countSearchorder(OrderSearchConditionDto param) {
-    return 0;
   }
 
 }
