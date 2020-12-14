@@ -1,8 +1,6 @@
 package com.ewin.sos.service;
 
-import com.ewin.sos.enums.ErrorCodeEnum;
-import com.ewin.sos.exception.CustomException;
-import com.ewin.sos.vo.OrderSearchConditionVo;
+import com.ewin.sos.vo.req.OrderSearchConditionVo;
 import com.ewin.sos.entity.Order;
 import com.ewin.sos.entity.OrderExample;
 import com.ewin.sos.exception.NotFoundException;
@@ -68,7 +66,7 @@ public class OrderService {
 
     Map<String, Object> result = new HashMap<>();
     result.put("total", orderMapper.countByExample(example));
-    result.put("recordset", orderMapper.selectByExampleWithRowbounds(example, rowBounds));
+    result.put("list", orderMapper.selectByExampleWithRowbounds(example, rowBounds));
     result.put("pageSize", pageSize);
     result.put("pageNum", pageNum);
 

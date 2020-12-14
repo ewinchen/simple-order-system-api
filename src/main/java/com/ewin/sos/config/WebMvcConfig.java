@@ -10,16 +10,21 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
-  @Autowired
-  AuthInterceptor authInterceptor;
+    @Autowired
+    AuthInterceptor authInterceptor;
 
-  @Override
-  public void addCorsMappings(CorsRegistry registry) {
-    registry.addMapping("/**").allowedMethods("GET", "PUT", "OPTIONS", "POST", "DELETE", "HEAD", "PATCH").allowedOrigins("*");
-  }
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedMethods("GET", "PUT", "OPTIONS", "POST", "DELETE", "HEAD", "PATCH")
+                .allowedOrigins("*");
+    }
 
-  @Override
-  public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(authInterceptor).addPathPatterns("/**").excludePathPatterns("/api/login").excludePathPatterns("/api/login-check");
-  }
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(authInterceptor)
+                .addPathPatterns("/**")
+                .excludePathPatterns("/api/auth/login")
+                .excludePathPatterns("/api/auth/loginCheck");
+    }
 }

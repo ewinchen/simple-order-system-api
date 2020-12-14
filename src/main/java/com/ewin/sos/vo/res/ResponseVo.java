@@ -1,4 +1,4 @@
-package com.ewin.sos.vo;
+package com.ewin.sos.vo.res;
 
 import lombok.Data;
 
@@ -14,8 +14,5 @@ public class ResponseVo<T> implements Serializable {
     private String message;
 
     private T data;
-
-    private Long total;
-
 
 }

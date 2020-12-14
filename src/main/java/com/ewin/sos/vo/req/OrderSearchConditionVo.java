@@ -1,4 +1,4 @@
-package com.ewin.sos.vo;
+package com.ewin.sos.vo.req;
 
 import lombok.Data;
 
